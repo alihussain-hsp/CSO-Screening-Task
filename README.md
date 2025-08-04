@@ -3,10 +3,7 @@
 A simple Laravel-based User Management System with CRUD operations, DataTables, and SweetAlert2 integration.
 
 ---
-
-### 🔗 Live Demo
-
-👉 [**View Live Demo**](https://alihussain.com/CSO-Screening-Task)
+ 
 
 
 ### 🚀 Features
