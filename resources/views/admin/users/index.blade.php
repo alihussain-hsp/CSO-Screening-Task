@@ -41,7 +41,7 @@
     <script>
         const modalId = '#userModal';
         var userDataTable = null;
-        const showError = showErrors = function(object) {
+        const showErrors = function(object) {
             var keys = Object.keys(object);
 
             $(".has-error").find(".invalid-feedback").remove();
@@ -66,6 +66,28 @@
                 $(grp).addClass("has-error");
             }
         };
+        const showError = function(message) {
+            Swal.fire({
+                icon: 'error',
+                toast: true,
+                title: message,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        };
+        const showSuccess = function(message) {
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: message,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        };
 
         function showNewUserForm() {
             let url = "{{ route('users.create') }}"
@@ -83,13 +105,14 @@
                     if (response.status == 'success') {
                         $(modalId).modal('hide');
                         userDataTable.draw();
+                        showSuccess(response.message);
                     }
                 },
                 error: function(xhr) {
                     if (xhr.status == 422) {
-                        showError(xhr.responseJSON?.errors);
+                        showErrors(xhr.responseJSON?.errors);
                     } else {
-                        alert('An error occurred while creating the user.');
+                        showError('An error occurred while creating the user.');
                     }
                 }
             })
@@ -108,13 +131,14 @@
                     if (response.status == 'success') {
                         $(modalId).modal('hide');
                         userDataTable.draw();
+                        showSuccess(response.message);
                     }
                 },
                 error: function(xhr) {
                     if (xhr.status == 422) {
-                        showError(xhr.responseJSON?.errors);
+                        showErrors(xhr.responseJSON?.errors);
                     } else {
-                        alert('An error occurred while creating the user.');
+                        showError('An error occurred while creating the user.');
                     }
                 }
             })
@@ -144,7 +168,7 @@
                 .then((willDelete) => {
                     if (willDelete.isConfirmed) {
                         let url = "{{ route('users.destroy', ':id') }}";
-                        url = url.replace(':id', id);
+                        url = url.replace(':id', 'id');
 
                         let data = {
                             _token: '{{ csrf_token() }}',
@@ -156,7 +180,11 @@
                             success: function(response) {
                                 if (response.status == 'success') {
                                     userDataTable.draw();
+                                    showSuccess(response.message);
                                 }
+                            },
+                            error: function(xhr) {
+                                showError('An error occurred while creating the user.');
                             }
                         })
                     }
